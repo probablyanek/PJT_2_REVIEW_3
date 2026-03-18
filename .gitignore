@@ -30,6 +30,7 @@
 *.nls
 *.out
 *.pdf
+*.pptx
 *.pyg
 *.run.xml
 *.snm
