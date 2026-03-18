@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Beamer Presentation — ML-Based Sensor Fusion for Indoor Localization
+% Beamer Presentation ; ML-Based Sensor Fusion for Indoor Localization
 % Based on PLAN.md content, using THEME template style
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -88,7 +88,7 @@
 \begin{document}
 
 %========================================================================================
-%	SLIDE 1 — TITLE
+%	SLIDE 1 ; TITLE
 %========================================================================================
 
 \begin{frame}[plain]
@@ -96,21 +96,21 @@
 \end{frame}
 
 %========================================================================================
-%	SLIDE 2 — THE PROBLEM
+%	SLIDE 2 ; THE PROBLEM
 %========================================================================================
 
 \section{Problem \& Motivation}
 
 \begin{frame}
 	\frametitle{Why Sensor Fusion for Indoor Spaces?}
-	\framesubtitle{GPS Fails Indoors — Radar \& Wi-Fi Have Opposite Weaknesses}
+	\framesubtitle{GPS Fails Indoors ; Radar \& Wi-Fi Have Opposite Weaknesses}
 
 	\begin{columns}[c]
 		\begin{column}{0.50\textwidth}
 			\scriptsize
 			\textbf{The Gap:}
 			\begin{itemize}
-				\item GPS fails indoors — warehouses, factories, hospitals have \alert{zero} satellite coverage
+				\item GPS fails indoors ; warehouses, factories, hospitals have \alert{zero} satellite coverage
 				\item 6G ISAC nodes combine communication + sensing on one device
 				\item No single sensor works reliably alone
 			\end{itemize}
@@ -138,16 +138,16 @@
 \end{frame}
 
 %========================================================================================
-%	SLIDE 3 — OBJECTIVES
+%	SLIDE 3 ; OBJECTIVES
 %========================================================================================
 
 \begin{frame}
 	\frametitle{Project Objectives}
 
 	\begin{enumerate}
-		\item Design a \textbf{COTS hardware node} that performs radar + Wi-Fi sensing simultaneously
+		\item Design a \textbf{hardware node} that performs radar + Wi-Fi sensing simultaneously
 		\item Develop an \textbf{ML model} that learns to dynamically trust the better sensor
-		\item Deploy the trained model directly on the \textbf{ESP32-S3} microcontroller (\alert{edge inference} — no cloud)
+		\item Deploy the trained model directly on the \textbf{ESP32-S3} microcontroller (\alert{edge inference} ; no cloud)
 		\item Validate that fused accuracy \textbf{beats either sensor alone} under occlusion
 	\end{enumerate}
 
@@ -161,44 +161,44 @@
 		\end{column}
 		\begin{column}{0.45\textwidth}
 			\begin{exampleblock}{Coordinate System}
-				Polar $(r, \theta)$ — harmonizes radar's 2D output with Wi-Fi's range-only output
+				Polar $(r, \theta)$ ; harmonizes radar's 2D output with Wi-Fi's range-only output
 			\end{exampleblock}
 		\end{column}
 	\end{columns}
 \end{frame}
 
 %========================================================================================
-%	SLIDE 4 — HARDWARE ARCHITECTURE
+%	SLIDE 4 ; HARDWARE ARCHITECTURE
 %========================================================================================
 
 \section{System Design}
 
 \begin{frame}
 	\frametitle{System Hardware}
-	\framesubtitle{All COTS Components}
+	\framesubtitle{All OTS Components}
 
 	\begin{columns}[c]
 		\begin{column}{0.42\textwidth}
 			\scriptsize
 			\begin{block}{Sensing Node}
 				\begin{itemize}
-					\item \textbf{ESP32-S3} — Dual-core LX7 @ 240\,MHz
-					\item \textbf{HLK-LD2450} — 24\,GHz FMCW radar, UART @ 256k baud, 10--15\,Hz
+					\item \textbf{ESP32-S3} ; Dual-core LX7 @ 240\,MHz
+					\item \textbf{HLK-LD2450} ; 24\,GHz FMCW radar, UART @ 256k baud, 10--15\,Hz
 					\item Roles: FTM initiator + radar parser + \alert{ML inference engine}
 				\end{itemize}
 			\end{block}
 
 			\begin{exampleblock}{Active Tag}
 				\begin{itemize}
-					\item \textbf{ESP32} — FTM responder + ESP-NOW heartbeat
-					\item Trihedral corner reflector — boosts RCS, zero compute cost
+					\item \textbf{ESP32} ; FTM responder + ESP-NOW heartbeat
+					\item Trihedral corner reflector ; boosts RCS, zero compute cost
 				\end{itemize}
 			\end{exampleblock}
 		\end{column}
 
 		\begin{column}{0.55\textwidth}
 			\centering
-			% TikZ Hardware Connection Diagram — vertical layout
+			% TikZ Hardware Connection Diagram ; vertical layout
 			\begin{tikzpicture}[scale=0.9, transform shape]
 				\node[sysblock, fill=blue!12] (radar) {HLK-LD2450\\24\,GHz Radar};
 				\node[sysblock, fill=green!12, below=1.0cm of radar] (esp) {ESP32-S3\\Sensor Node};
@@ -217,12 +217,12 @@
 \end{frame}
 
 %========================================================================================
-%	SLIDE 5 — RTOS TASK ARCHITECTURE
+%	SLIDE 5 ; RTOS TASK ARCHITECTURE
 %========================================================================================
 
 \begin{frame}
 	\frametitle{Dual-Core FreeRTOS Design}
-	\framesubtitle{Strict Core Isolation — Zero Dropped Radar Frames}
+	\framesubtitle{Strict Core Isolation ; Zero Dropped Radar Frames}
 
 	\begin{columns}[c]
 		\begin{column}{0.38\textwidth}
@@ -238,7 +238,7 @@
 
 		\begin{column}{0.58\textwidth}
 			\centering
-			% TikZ RTOS Architecture — scaled down to prevent overflow
+			% TikZ RTOS Architecture ; scaled down to prevent overflow
 			\begin{tikzpicture}[scale=0.65, transform shape,
 				taskbox/.style={rectangle, rounded corners=2pt, draw=#1!70, fill=#1!8, minimum width=3.5cm, minimum height=0.55cm, text width=3.3cm, align=left, font=\tiny},
 				taskbox/.default=blue]
@@ -267,7 +267,7 @@
 \end{frame}
 
 %========================================================================================
-%	SLIDE 6 — POLAR COORDINATE DESIGN
+%	SLIDE 6 ; POLAR COORDINATE DESIGN
 %========================================================================================
 
 \begin{frame}
@@ -296,7 +296,7 @@
 
 		\begin{column}{0.48\textwidth}
 			\centering
-			% TikZ Polar Coordinate Diagram — slightly reduced scale
+			% TikZ Polar Coordinate Diagram ; slightly reduced scale
 			\begin{tikzpicture}[scale=0.95, transform shape]
 				% Sensor origin
 				\fill[blue!70] (0,0) circle (3pt);
@@ -338,7 +338,7 @@
 \end{frame}
 
 %========================================================================================
-%	SLIDE 7 — FEATURE ENGINEERING
+%	SLIDE 7 ; FEATURE ENGINEERING
 %========================================================================================
 
 \section{ML Pipeline}
@@ -389,17 +389,17 @@
 \end{frame}
 
 %========================================================================================
-%	SLIDE 8 — ML MODEL ARCHITECTURE
+%	SLIDE 8 ; ML MODEL ARCHITECTURE
 %========================================================================================
 
 \begin{frame}
-	\frametitle{Float32 MLP — Why Not INT8?}
+	\frametitle{Float32 MLP ; Why Not INT8?}
 	\framesubtitle{Compact Neural Architecture for Edge Deployment}
 
 	\begin{columns}[c]
 		\begin{column}{0.35\textwidth}
 			\centering
-			% TikZ MLP Architecture — compact
+			% TikZ MLP Architecture ; compact
 			\begin{tikzpicture}[scale=0.8, transform shape,
 				layer/.style={rectangle, rounded corners=3pt, draw=#1!70, fill=#1!12, minimum width=2.3cm, minimum height=0.65cm, font=\scriptsize\bfseries, align=center},
 				layer/.default=blue]
@@ -448,7 +448,7 @@
 \end{frame}
 
 %========================================================================================
-%	SLIDE 9 — TRAINING PIPELINE
+%	SLIDE 9 ; TRAINING PIPELINE
 %========================================================================================
 
 \begin{frame}
@@ -456,7 +456,7 @@
 	\framesubtitle{End-to-End Training Pipeline}
 
 	\centering
-	% TikZ Training Pipeline — compact layout to avoid overlap
+	% TikZ Training Pipeline ; compact layout to avoid overlap
 	\begin{tikzpicture}[scale=0.75, transform shape]
 		\node[pipeblock=green!50!black] (data) at (0,0) {Manual Data\\Collection};
 		\node[pipeblock=blue] (feat) at (2.8,0) {Feature\\Engineering};
@@ -469,7 +469,7 @@
 		\draw[dataflow] (train) -- (conv);
 		\draw[dataflow] (conv) -- (deploy);
 
-		% Annotations below — reduced text width, clear of deploy box
+		% Annotations below ; reduced text width, clear of deploy box
 		\node[annot, below=0.12cm of data, text width=1.8cm, align=center] {12 static poses\\30s each\\Micro-motion\\Polar ground truth};
 		\node[annot, below=0.12cm of feat, text width=1.8cm, align=center] {Forward-fill\\Normalize [0,1]\\Window = 5\\Split by segment};
 		\node[annot, below=0.12cm of train, text width=1.8cm, align=center] {EarlyStopping\\ReduceLR\\MSE loss\\200 epochs max};
@@ -486,14 +486,14 @@
 		\end{column}
 		\begin{column}{0.45\textwidth}
 			\begin{block}{Split}
-				70\% train / 15\% val / 15\% test — split by \alert{segment}, not by row
+				70\% train / 15\% val / 15\% test ; split by \alert{segment}, not by row
 			\end{block}
 		\end{column}
 	\end{columns}
 \end{frame}
 
 %========================================================================================
-%	NEW SLIDE — PHYSICAL SETUP
+%	NEW SLIDE ; PHYSICAL SETUP
 %========================================================================================
 
 \begin{frame}
@@ -528,13 +528,13 @@
 \end{frame}
 
 %========================================================================================
-%	SLIDE 10 — RESULTS: MODEL ACCURACY
+%	SLIDE 10 ; RESULTS: MODEL ACCURACY
 %========================================================================================
 
 \section{Results \& Analysis}
 
 \begin{frame}
-	\frametitle{Fusion Accuracy — Test Set}
+	\frametitle{Fusion Accuracy ; Test Set}
 	\framesubtitle{Model Performance Metrics}
 
 	\begin{columns}[c]
@@ -567,7 +567,7 @@
 \end{frame}
 
 %========================================================================================
-%	SLIDE 11 — RESULTS: ERROR BY DISTANCE
+%	SLIDE 11 ; RESULTS: ERROR BY DISTANCE
 %========================================================================================
 
 \begin{frame}
@@ -603,7 +603,7 @@
 \end{frame}
 
 %========================================================================================
-%	SLIDE 12 — RESULTS: SENSOR COMPARISON
+%	SLIDE 12 ; RESULTS: SENSOR COMPARISON
 %========================================================================================
 
 \begin{frame}
@@ -650,14 +650,14 @@
 
 			\smallskip
 			\begin{block}{Adaptive Trust}
-				Model seamlessly shifts trust to Wi-Fi when radar drops out — \alert{no manual switching} logic.
+				Model seamlessly shifts trust to Wi-Fi when radar drops out ; \alert{no manual switching} logic.
 			\end{block}
 		\end{column}
 	\end{columns}
 \end{frame}
 
 %========================================================================================
-%	SLIDE 13 — RESULTS: EDGE DEPLOYMENT
+%	SLIDE 13 ; RESULTS: EDGE DEPLOYMENT
 %========================================================================================
 
 \begin{frame}
@@ -696,7 +696,7 @@
 \end{frame}
 
 %========================================================================================
-%	SLIDE 14 — RESULTS: MULTIPATH MITIGATION
+%	SLIDE 14 ; RESULTS: MULTIPATH MITIGATION
 %========================================================================================
 
 \begin{frame}
@@ -720,7 +720,7 @@
 
 		\begin{column}{0.46\textwidth}
 			\centering
-			% TikZ Min-RTT visualization — scaled down, labels inside chart area
+			% TikZ Min-RTT visualization ; scaled down, labels inside chart area
 			\begin{tikzpicture}[scale=0.7, transform shape]
 				% Bar chart showing raw vs filtered
 				\draw[->] (0,0) -- (0,4) node[above, font=\tiny] {Range (m)};
@@ -731,7 +731,7 @@
 					\fill[blue!30] (\x-0.1, 0) rectangle (\x+0.1, \h);
 				}
 
-				% Min line — label inside chart area
+				% Min line ; label inside chart area
 				\draw[red!70, thick, dashed] (0, 1.5) -- (5.2, 1.5);
 				\node[font=\tiny\bfseries, text=red!70, anchor=south west] at (0.1, 1.5) {Min: 2.7\,m};
 
@@ -748,7 +748,7 @@
 \end{frame}
 
 %========================================================================================
-%	SLIDE 15 — CHALLENGES & SOLUTIONS
+%	SLIDE 15 ; CHALLENGES & SOLUTIONS
 %========================================================================================
 
 \section{Challenges \& Solutions}
@@ -763,9 +763,9 @@
 		\toprule
 		\textbf{\#} & \textbf{Challenge} & \textbf{Root Cause} & \textbf{Solution} \\
 		\midrule
-		1 & Radar drops stationary targets & LD2450 MTI filter needs Doppler shift & Micro-motion protocol — subjects sway gently \\[3pt]
+		1 & Radar drops stationary targets & LD2450 MTI filter needs Doppler shift & Micro-motion protocol ; subjects sway gently \\[3pt]
 		2 & UART corruption during FTM & Wi-Fi ISR preempts UART on same core, FIFO overflows & UART on Core 1, Wi-Fi on Core 0 \\[3pt]
-		3 & INT8 quant.\ destroys accuracy & 256 bins / 6\,m = 2.35\,cm floor; tanh LUT 30\%+ off & Stay \alert{Float32} — 11.6\,KB \\[3pt]
+		3 & INT8 quant.\ destroys accuracy & 256 bins / 6\,m = 2.35\,cm floor; tanh LUT 30\%+ off & Stay \alert{Float32} ; 11.6\,KB \\[3pt]
 		4 & Zero-fill pulls to origin & $r{=}0$ means ``at sensor'' not ``unknown'' & \alert{Forward-fill} + binary fresh flag \\[3pt]
 		5 & Wi-Fi multipath inflates range & 2.4\,GHz reflects, 20\,MHz can't resolve & \alert{HT40} + min-RTT filter \\
 		\bottomrule
@@ -773,7 +773,7 @@
 \end{frame}
 
 %========================================================================================
-%	SLIDE 16 — REMAINING WORK
+%	SLIDE 16 ; REMAINING WORK
 %========================================================================================
 
 \section{Remaining Work}
@@ -791,7 +791,7 @@
 			\midrule
 			Extended range data & Pending & Current: 2--5\,m only. Need 0.5--2\,m and 5--6\,m segments \\[3pt]
 			Hardware packaging & Pending & 3D-print PLA enclosures, vertical stacking to reduce EM coupling \\[3pt]
-			Multi-tag testing & Pending & 2--3 simultaneous tags — ESP-NOW collision handling \\[3pt]
+			Multi-tag testing & Pending & 2--3 simultaneous tags ; ESP-NOW collision handling \\[3pt]
 			Field validation & Pending & Walk-tests in warehouse / factory environment \\
 			\bottomrule
 		\end{tabular}
@@ -805,7 +805,7 @@
 \end{frame}
 
 %========================================================================================
-%	SLIDE 17 — REFERENCES
+%	SLIDE 17 ; REFERENCES
 %========================================================================================
 
 \section{References}
@@ -817,21 +817,21 @@
 	\begin{columns}[t]
 		\begin{column}{0.48\textwidth}
 			\begin{enumerate}
-				\item \textbf{Pegoraro et al.\ (2023)} — SPARROW: mmWave radar occlusion characterization
-				\item \textbf{Wang et al.\ (2022)} — ISAC for 6G: principles and applications
-				\item \textbf{Chen, Arambel \& Mehra (2002)} — Covariance Intersection for distributed fusion
-				\item \textbf{Aggarwal et al.\ (2022)} — IEEE 802.11mc FTM ranging evaluation
-				\item \textbf{Zubow et al.\ (2023)} — FTM-based indoor localization
+				\item \textbf{Pegoraro et al.\ (2023)} ; SPARROW: mmWave radar occlusion characterization
+				\item \textbf{Wang et al.\ (2022)} ; ISAC for 6G: principles and applications
+				\item \textbf{Chen, Arambel \& Mehra (2002)} ; Covariance Intersection for distributed fusion
+				\item \textbf{Aggarwal et al.\ (2022)} ; IEEE 802.11mc FTM ranging evaluation
+				\item \textbf{Zubow et al.\ (2023)} ; FTM-based indoor localization
 			\end{enumerate}
 		\end{column}
 		\begin{column}{0.48\textwidth}
 			\begin{enumerate}
 				\setcounter{enumi}{5}
-				\item \textbf{Hoang et al.\ (2025)} — Wi-Fi FTM survey
-				\item \textbf{Gaiba et al.\ (2024)} — ESP32 Wi-Fi sensing platform
-				\item \textbf{Espressif (2024)} — ESP-IDF v5.2 FTM programming guide
-				\item \textbf{David et al.\ (2022)} — TFLite Micro deployment on embedded MCUs
-				\item \textbf{HiLink (2024)} — HLK-LD2450 datasheet \& UART protocol
+				\item \textbf{Hoang et al.\ (2025)} ; Wi-Fi FTM survey
+				\item \textbf{Gaiba et al.\ (2024)} ; ESP32 Wi-Fi sensing platform
+				\item \textbf{Espressif (2024)} ; ESP-IDF v5.2 FTM programming guide
+				\item \textbf{David et al.\ (2022)} ; TFLite Micro deployment on embedded MCUs
+				\item \textbf{HiLink (2024)} ; HLK-LD2450 datasheet \& UART protocol
 			\end{enumerate}
 		\end{column}
 	\end{columns}
