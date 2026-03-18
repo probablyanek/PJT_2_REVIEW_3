@@ -32,6 +32,17 @@
 \setbeamertemplate{caption}[numbered]
 
 %----------------------------------------------------------------------------------------
+%	ADD LOGO TO HEADER (matching theme)
+%----------------------------------------------------------------------------------------
+
+\addtobeamertemplate{frametitle}{}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=north east, inner sep=0pt, yshift=0.1cm, xshift=-0.3cm]
+      at (current page.north east) {\includegraphics[height=1.1cm]{logo.png}};
+  \end{tikzpicture}%
+}
+
+%----------------------------------------------------------------------------------------
 %	PRESENTATION INFORMATION
 %----------------------------------------------------------------------------------------
 
@@ -187,19 +198,19 @@
 
 		\begin{column}{0.55\textwidth}
 			\centering
-			% TikZ Hardware Connection Diagram — scaled to fit within column
-			\begin{tikzpicture}[scale=0.65, transform shape]
+			% TikZ Hardware Connection Diagram — vertical layout
+			\begin{tikzpicture}[scale=0.9, transform shape]
 				\node[sysblock, fill=blue!12] (radar) {HLK-LD2450\\24\,GHz Radar};
-				\node[sysblock, fill=green!12, right=1.2cm of radar] (esp) {ESP32-S3\\Sensor Node};
-				\node[sysblock, fill=orange!12, right=1.2cm of esp] (tag) {ESP32\\Active Tag};
+				\node[sysblock, fill=green!12, below=1.0cm of radar] (esp) {ESP32-S3\\Sensor Node};
+				\node[sysblock, fill=orange!12, below=1.0cm of esp] (tag) {ESP32\\Active Tag};
 
-				\draw[dataflow] (radar) -- node[above, font=\tiny] {UART 256k} node[below, font=\tiny, text=gray] {GPIO16/17} (esp);
-				\draw[dataflow, <->] (esp) -- node[above, font=\tiny] {Wi-Fi FTM} node[below, font=\tiny, text=gray] {802.11mc} (tag);
+				\draw[dataflow] (radar) -- node[right, font=\tiny] {UART 256k} node[left, font=\tiny, text=gray] {GPIO16/17} (esp);
+				\draw[dataflow, <->] (esp) -- node[right, font=\tiny] {Wi-Fi FTM} node[left, font=\tiny, text=gray] {802.11mc} (tag);
 
-				\node[below=0.5cm of esp, font=\tiny, text=gray] {Core 0: Wi-Fi \quad Core 1: UART + ML};
+				\node[left=0.3cm of esp, font=\tiny, text=gray, align=right] {Core 0: Wi-Fi \\ Core 1: UART + ML};
 
 				% Reflector annotation
-				\node[below=0.3cm of tag, font=\tiny, text=gray, text width=2cm, align=center] {+ Corner Reflector\\(RCS boost)};
+				\node[right=0.3cm of tag, font=\tiny, text=gray, text width=2cm, align=left] {+ Corner Reflector\\(RCS boost)};
 			\end{tikzpicture}
 		\end{column}
 	\end{columns}
