@@ -470,7 +470,7 @@
 		\draw[dataflow] (conv) -- (deploy);
 
 		% Annotations below — reduced text width, clear of deploy box
-		\node[annot, below=0.12cm of data, text width=1.8cm, align=center] {70 static poses\\30s each\\Micro-motion\\Polar ground truth};
+		\node[annot, below=0.12cm of data, text width=1.8cm, align=center] {12 static poses\\30s each\\Micro-motion\\Polar ground truth};
 		\node[annot, below=0.12cm of feat, text width=1.8cm, align=center] {Forward-fill\\Normalize [0,1]\\Window = 5\\Split by segment};
 		\node[annot, below=0.12cm of train, text width=1.8cm, align=center] {EarlyStopping\\ReduceLR\\MSE loss\\200 epochs max};
 		\node[annot, below=0.12cm of conv, text width=1.8cm, align=center] {Pure Float32\\No quantization\\xxd $\to$ C header\\alignas(16)};
@@ -481,13 +481,48 @@
 	\begin{columns}[c]
 		\begin{column}{0.45\textwidth}
 			\begin{block}{Dataset}
-				$\sim$35,000 events across 70 segments (50 clear + 20 occluded)
+				$\sim$35,000 events across 12 segments (8 clear + 4 occluded)
 			\end{block}
 		\end{column}
 		\begin{column}{0.45\textwidth}
 			\begin{block}{Split}
 				70\% train / 15\% val / 15\% test — split by \alert{segment}, not by row
 			\end{block}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+%========================================================================================
+%	NEW SLIDE — PHYSICAL SETUP
+%========================================================================================
+
+\begin{frame}
+	\frametitle{Physical Setup \& Data Acquisition}
+	\framesubtitle{Markers and Positioning for Ground Truth Collection}
+
+	\begin{columns}[c]
+		\begin{column}{0.45\textwidth}
+			\scriptsize
+			\textbf{Data Collection Protocol:}
+			\begin{itemize}
+				\item \textbf{Ground Truth Markers:} 12 precisely measured points across the room
+				\item \textbf{Target Positioning:} ESP32-S3 tag + corner reflector moved through grid
+				\item \textbf{Environment:} Typical hostel room with dense obstacles (furniture/objects)
+				\item \textbf{Capturing Variance:} 30s capture per pose to record micro-motion Doppler shifts
+			\end{itemize}
+
+			\medskip
+			\begin{exampleblock}{Goal}
+				Generate a high-fidelity dataset of $(r, \theta, \text{fresh})$ features with polar ground truth $(\hat{r}, \hat{\theta})$.
+			\end{exampleblock}
+		\end{column}
+
+		\begin{column}{0.52\textwidth}
+			\centering
+			\begin{figure}
+				\includegraphics[width=\linewidth, height=0.7\textheight, keepaspectratio]{data_acquistion_training for_ml.png}
+				\caption{Indoor lab environment with ground truth markers}
+			\end{figure}
 		\end{column}
 	\end{columns}
 \end{frame}
