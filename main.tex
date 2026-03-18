@@ -32,17 +32,6 @@
 \setbeamertemplate{caption}[numbered]
 
 %----------------------------------------------------------------------------------------
-%	ADD LOGO TO HEADER (matching theme)
-%----------------------------------------------------------------------------------------
-
-\addtobeamertemplate{frametitle}{}{%
-  \begin{tikzpicture}[remember picture,overlay]
-    \node[anchor=north east, inner sep=0pt, yshift=0.1cm, xshift=-0.3cm]
-      at (current page.north east) {\includegraphics[height=1.1cm]{logo.png}};
-  \end{tikzpicture}%
-}
-
-%----------------------------------------------------------------------------------------
 %	PRESENTATION INFORMATION
 %----------------------------------------------------------------------------------------
 
@@ -62,8 +51,8 @@
 \tikzset{
   sysblock/.style={
     rectangle, rounded corners=3pt, draw=structure.fg!80, fill=structure.fg!8,
-    minimum width=2.4cm, minimum height=1cm,
-    text width=2.2cm, align=center, font=\scriptsize\bfseries
+    minimum width=2.2cm, minimum height=0.9cm,
+    text width=2cm, align=center, font=\scriptsize\bfseries
   },
   dataflow/.style={
     -Stealth, thick, draw=structure.fg!70
@@ -76,8 +65,8 @@
   coreblock/.default=blue,
   pipeblock/.style={
     rectangle, rounded corners=3pt, draw=structure.fg!80, fill=#1!12,
-    minimum width=2cm, minimum height=0.8cm,
-    text width=1.8cm, align=center, font=\tiny\bfseries
+    minimum width=1.8cm, minimum height=0.7cm,
+    text width=1.6cm, align=center, font=\tiny\bfseries
   },
   pipeblock/.default=blue,
   annot/.style={font=\tiny, text=gray!70!black},
@@ -106,7 +95,7 @@
 	\framesubtitle{GPS Fails Indoors — Radar \& Wi-Fi Have Opposite Weaknesses}
 
 	\begin{columns}[c]
-		\begin{column}{0.52\textwidth}
+		\begin{column}{0.50\textwidth}
 			\scriptsize
 			\textbf{The Gap:}
 			\begin{itemize}
@@ -119,10 +108,10 @@
 			\textbf{Bottom line:} Radar is precise but blind behind walls. Wi-Fi sees through walls but is noisy. \alert{Fusing them} gives the best of both.
 		\end{column}
 
-		\begin{column}{0.45\textwidth}
+		\begin{column}{0.47\textwidth}
 			\centering
 			\scriptsize
-			\begin{tabular}{>{\raggedright}p{1.4cm} >{\centering}p{2cm} >{\centering\arraybackslash}p{2cm}}
+			\begin{tabular}{>{\raggedright}p{1.2cm} >{\centering}p{1.8cm} >{\centering\arraybackslash}p{1.8cm}}
 				\toprule
 				& \textbf{Radar} \newline (24\,GHz FMCW) & \textbf{Wi-Fi FTM} \newline (802.11mc) \\
 				\midrule
@@ -198,11 +187,11 @@
 
 		\begin{column}{0.55\textwidth}
 			\centering
-			% TikZ Hardware Connection Diagram
-			\begin{tikzpicture}[scale=0.85, transform shape]
+			% TikZ Hardware Connection Diagram — scaled to fit within column
+			\begin{tikzpicture}[scale=0.65, transform shape]
 				\node[sysblock, fill=blue!12] (radar) {HLK-LD2450\\24\,GHz Radar};
-				\node[sysblock, fill=green!12, right=2.5cm of radar] (esp) {ESP32-S3\\Sensor Node};
-				\node[sysblock, fill=orange!12, right=2.5cm of esp] (tag) {ESP32\\Active Tag};
+				\node[sysblock, fill=green!12, right=1.2cm of radar] (esp) {ESP32-S3\\Sensor Node};
+				\node[sysblock, fill=orange!12, right=1.2cm of esp] (tag) {ESP32\\Active Tag};
 
 				\draw[dataflow] (radar) -- node[above, font=\tiny] {UART 256k} node[below, font=\tiny, text=gray] {GPIO16/17} (esp);
 				\draw[dataflow, <->] (esp) -- node[above, font=\tiny] {Wi-Fi FTM} node[below, font=\tiny, text=gray] {802.11mc} (tag);
@@ -238,26 +227,26 @@
 
 		\begin{column}{0.58\textwidth}
 			\centering
-			% TikZ RTOS Architecture
-			\begin{tikzpicture}[scale=0.72, transform shape,
-				taskbox/.style={rectangle, rounded corners=2pt, draw=#1!70, fill=#1!8, minimum width=3.8cm, minimum height=0.6cm, text width=3.6cm, align=left, font=\tiny},
+			% TikZ RTOS Architecture — scaled down to prevent overflow
+			\begin{tikzpicture}[scale=0.65, transform shape,
+				taskbox/.style={rectangle, rounded corners=2pt, draw=#1!70, fill=#1!8, minimum width=3.5cm, minimum height=0.55cm, text width=3.3cm, align=left, font=\tiny},
 				taskbox/.default=blue]
 
 				% Core 0 box
-				\node[draw=blue!60, fill=blue!3, rounded corners=4pt, minimum width=4.4cm, minimum height=3.6cm, label={[font=\small\bfseries, text=blue!80]above:Core 0}] (c0) at (0,0) {};
+				\node[draw=blue!60, fill=blue!3, rounded corners=4pt, minimum width=4cm, minimum height=3.2cm, label={[font=\small\bfseries, text=blue!80]above:Core 0}] (c0) at (0,0) {};
 
 				% Core 1 box
-				\node[draw=green!60!black, fill=green!3, rounded corners=4pt, minimum width=4.4cm, minimum height=3.6cm, label={[font=\small\bfseries, text=green!60!black]above:Core 1}] (c1) at (5.5,0) {};
+				\node[draw=green!60!black, fill=green!3, rounded corners=4pt, minimum width=4cm, minimum height=3.2cm, label={[font=\small\bfseries, text=green!60!black]above:Core 1}] (c1) at (5,0) {};
 
 				% Core 0 tasks
-				\node[taskbox=blue] at (0, 0.9) {\textbf{wifi\_ftm\_task} (prio 5)\\FTM every 500\,ms, HT40};
+				\node[taskbox=blue] at (0, 0.8) {\textbf{wifi\_ftm\_task} (prio 5)\\FTM every 500\,ms, HT40};
 				\node[taskbox=blue] at (0, -0.1) {\textbf{espnow\_task}\\Heartbeat monitor};
-				\node[taskbox=blue, draw=red!50] at (0, -1.1) {\small\textit{Never touches UART}};
+				\node[taskbox=blue, draw=red!50] at (0, -1.0) {\small\textit{Never touches UART}};
 
 				% Core 1 tasks
-				\node[taskbox=green!50!black] at (5.5, 0.9) {\textbf{uart\_radar\_task} (prio 5)\\8192-byte RX buffer};
-				\node[taskbox=green!50!black] at (5.5, -0.1) {\textbf{ml\_inference\_task} (prio 3)\\TFLite Micro Float32};
-				\node[taskbox=green!50!black] at (5.5, -1.1) {$\sim$350\,$\mu$s / inference};
+				\node[taskbox=green!50!black] at (5, 0.8) {\textbf{uart\_radar\_task} (prio 5)\\8192-byte RX buffer};
+				\node[taskbox=green!50!black] at (5, -0.1) {\textbf{ml\_inference\_task} (prio 3)\\TFLite Micro Float32};
+				\node[taskbox=green!50!black] at (5, -1.0) {$\sim$350\,$\mu$s / inference};
 
 				% Queue arrow
 				\draw[dataflow, draw=purple!70, dashed] (c0.east) -- node[above, font=\tiny, text=purple!70] {FreeRTOS Queue} node[below, font=\tiny, text=purple!50] {64 $\times$ sensor\_event\_t} (c1.west);
@@ -296,34 +285,34 @@
 
 		\begin{column}{0.48\textwidth}
 			\centering
-			% TikZ Polar Coordinate Diagram
-			\begin{tikzpicture}[scale=1.1, transform shape]
+			% TikZ Polar Coordinate Diagram — slightly reduced scale
+			\begin{tikzpicture}[scale=0.95, transform shape]
 				% Sensor origin
 				\fill[blue!70] (0,0) circle (3pt);
 				\node[below=3pt, font=\scriptsize\bfseries, text=blue!70] at (0,0) {Sensor};
 
 				% FoV cone
-				\fill[blue!8] (0,0) -- (60:4.2) arc (60:120:4.2) -- cycle;
-				\draw[blue!40, thick] (0,0) -- (60:4.2);
-				\draw[blue!40, thick] (0,0) -- (120:4.2);
-				\draw[blue!30, dashed] (60:4.2) arc (60:120:4.2);
+				\fill[blue!8] (0,0) -- (60:3.8) arc (60:120:3.8) -- cycle;
+				\draw[blue!40, thick] (0,0) -- (60:3.8);
+				\draw[blue!40, thick] (0,0) -- (120:3.8);
+				\draw[blue!30, dashed] (60:3.8) arc (60:120:3.8);
 
 				% Boresight
-				\draw[gray, thick] (0,0) -- (90:4.5);
-				\node[above, font=\tiny, text=gray] at (90:4.5) {$\theta=0^{\circ}$ (boresight)};
+				\draw[gray, thick] (0,0) -- (90:4.0);
+				\node[above, font=\tiny, text=gray] at (90:4.0) {$\theta=0^{\circ}$ (boresight)};
 
 				% Angle labels
-				\node[font=\tiny, text=blue!60] at (55:3.5) {$+60^{\circ}$};
-				\node[font=\tiny, text=blue!60] at (125:3.5) {$-60^{\circ}$};
+				\node[font=\tiny, text=blue!60] at (55:3.2) {$+60^{\circ}$};
+				\node[font=\tiny, text=blue!60] at (125:3.2) {$-60^{\circ}$};
 
 				% Target point
-				\fill[red!70] (65:3.2) circle (4pt);
-				\node[right=3pt, font=\tiny\bfseries, text=red!70] at (65:3.2) {Target};
-				\node[right=3pt, below right=-1pt and 3pt, font=\tiny, text=gray] at (65:3.2) {$(r{=}3.2\text{m},\ \theta{=}{+}25^{\circ})$};
+				\fill[red!70] (65:2.9) circle (4pt);
+				\node[right=3pt, font=\tiny\bfseries, text=red!70] at (65:2.9) {Target};
+				\node[right=3pt, below right=-1pt and 3pt, font=\tiny, text=gray] at (65:2.9) {$(r{=}3.2\text{m},\ \theta{=}{+}25^{\circ})$};
 
 				% Range arc
-				\draw[red!40, dashed, thick] (60:3.2) arc (60:95:3.2);
-				\node[font=\tiny, text=red!50] at (97:3.4) {$r$};
+				\draw[red!40, dashed, thick] (60:2.9) arc (60:95:2.9);
+				\node[font=\tiny, text=red!50] at (97:3.1) {$r$};
 
 				% Angle arc
 				\draw[-Stealth, orange!70, thick] (90:1.2) arc (90:65:1.2);
@@ -397,18 +386,18 @@
 	\framesubtitle{Compact Neural Architecture for Edge Deployment}
 
 	\begin{columns}[c]
-		\begin{column}{0.45\textwidth}
+		\begin{column}{0.35\textwidth}
 			\centering
-			% TikZ MLP Architecture
-			\begin{tikzpicture}[scale=0.85, transform shape,
-				layer/.style={rectangle, rounded corners=3pt, draw=#1!70, fill=#1!12, minimum width=2.5cm, minimum height=0.7cm, font=\scriptsize\bfseries, align=center},
+			% TikZ MLP Architecture — compact
+			\begin{tikzpicture}[scale=0.8, transform shape,
+				layer/.style={rectangle, rounded corners=3pt, draw=#1!70, fill=#1!12, minimum width=2.3cm, minimum height=0.65cm, font=\scriptsize\bfseries, align=center},
 				layer/.default=blue]
 
 				\node[layer=green!50!black] (input) at (0,0) {Input (25)};
-				\node[layer=blue] (d1) at (0,-1.3) {Dense(48, ReLU)};
-				\node[layer=blue] (d2) at (0,-2.6) {Dense(24, ReLU)};
-				\node[layer=red!60!black] (out) at (0,-3.9) {Dense(2, Linear)};
-				\node[font=\scriptsize, text=red!60!black] (outlbl) at (0,-4.7) {$[\hat{r}_{\text{norm}},\ \hat{\theta}_{\text{norm}}]$};
+				\node[layer=blue] (d1) at (0,-1.2) {Dense(48, ReLU)};
+				\node[layer=blue] (d2) at (0,-2.4) {Dense(24, ReLU)};
+				\node[layer=red!60!black] (out) at (0,-3.6) {Dense(2, Linear)};
+				\node[font=\scriptsize, text=red!60!black] (outlbl) at (0,-4.4) {$[\hat{r}_{\text{norm}},\ \hat{\theta}_{\text{norm}}]$};
 
 				\draw[dataflow] (input) -- (d1);
 				\draw[dataflow] (d1) -- (d2);
@@ -417,7 +406,7 @@
 			\end{tikzpicture}
 		\end{column}
 
-		\begin{column}{0.50\textwidth}
+		\begin{column}{0.60\textwidth}
 			\scriptsize
 			\begin{table}
 				\centering
@@ -434,7 +423,7 @@
 				\end{tabular}
 			\end{table}
 
-			\medskip
+			\smallskip
 			\begin{alertblock}{Why Float32, not INT8?}
 				\begin{itemize}
 					\item INT8: 256 bins over 6\,m = 2.35\,cm floor
@@ -456,27 +445,27 @@
 	\framesubtitle{End-to-End Training Pipeline}
 
 	\centering
-	% TikZ Training Pipeline
-	\begin{tikzpicture}[scale=0.85, transform shape]
+	% TikZ Training Pipeline — compact layout to avoid overlap
+	\begin{tikzpicture}[scale=0.75, transform shape]
 		\node[pipeblock=green!50!black] (data) at (0,0) {Manual Data\\Collection};
-		\node[pipeblock=blue] (feat) at (3.3,0) {Feature\\Engineering};
-		\node[pipeblock=purple] (train) at (6.6,0) {Training\\(Keras)};
-		\node[pipeblock=orange] (conv) at (9.9,0) {Conversion\\(TFLite)};
-		\node[pipeblock=red!60!black] (deploy) at (9.9,-2) {ESP32-S3\\TFLite Micro};
+		\node[pipeblock=blue] (feat) at (2.8,0) {Feature\\Engineering};
+		\node[pipeblock=purple] (train) at (5.6,0) {Training\\(Keras)};
+		\node[pipeblock=orange] (conv) at (8.4,0) {Conversion\\(TFLite)};
+		\node[pipeblock=red!60!black] (deploy) at (8.4,-2.5) {ESP32-S3\\TFLite Micro};
 
 		\draw[dataflow] (data) -- (feat);
 		\draw[dataflow] (feat) -- (train);
 		\draw[dataflow] (train) -- (conv);
 		\draw[dataflow] (conv) -- (deploy);
 
-		% Annotations below
-		\node[annot, below=0.2cm of data, text width=2.2cm, align=center] {70 static poses\\30s each\\Micro-motion\\Polar ground truth};
-		\node[annot, below=0.2cm of feat, text width=2.2cm, align=center] {Forward-fill\\Normalize [0,1]\\Window = 5\\Split by segment};
-		\node[annot, below=0.2cm of train, text width=2.2cm, align=center] {EarlyStopping\\ReduceLR\\MSE loss\\200 epochs max};
-		\node[annot, below=0.2cm of conv, text width=2.2cm, align=center] {Pure Float32\\No quantization\\xxd $\to$ C header\\alignas(16)};
+		% Annotations below — reduced text width, clear of deploy box
+		\node[annot, below=0.12cm of data, text width=1.8cm, align=center] {70 static poses\\30s each\\Micro-motion\\Polar ground truth};
+		\node[annot, below=0.12cm of feat, text width=1.8cm, align=center] {Forward-fill\\Normalize [0,1]\\Window = 5\\Split by segment};
+		\node[annot, below=0.12cm of train, text width=1.8cm, align=center] {EarlyStopping\\ReduceLR\\MSE loss\\200 epochs max};
+		\node[annot, below=0.12cm of conv, text width=1.8cm, align=center] {Pure Float32\\No quantization\\xxd $\to$ C header\\alignas(16)};
 	\end{tikzpicture}
 
-	\bigskip
+	\medskip
 
 	\begin{columns}[c]
 		\begin{column}{0.45\textwidth}
@@ -524,8 +513,8 @@
 
 		\begin{column}{0.45\textwidth}
 			\begin{figure}
-				\includegraphics[width=\linewidth, height=0.55\textheight, keepaspectratio]{Placeholder.png}
-				\caption{Training loss curve — convergence at epoch 23, EarlyStopping at epoch 38}
+				\includegraphics[width=\linewidth, height=0.50\textheight, keepaspectratio]{Placeholder.png}
+				\caption{Training loss curve}
 			\end{figure}
 		\end{column}
 	\end{columns}
@@ -558,10 +547,10 @@
 
 		\begin{column}{0.55\textwidth}
 			\begin{figure}
-				\includegraphics[width=0.48\linewidth, height=0.45\textheight, keepaspectratio]{Placeholder.png}
+				\includegraphics[width=0.46\linewidth, height=0.42\textheight, keepaspectratio]{Placeholder.png}
 				\hfill
-				\includegraphics[width=0.48\linewidth, height=0.45\textheight, keepaspectratio]{Placeholder.png}
-				\caption{Scatter: predicted vs ground truth ($r$ left, $\theta$ right)}
+				\includegraphics[width=0.46\linewidth, height=0.42\textheight, keepaspectratio]{Placeholder.png}
+				\caption{Predicted vs ground truth ($r$ left, $\theta$ right)}
 			\end{figure}
 		\end{column}
 	\end{columns}
@@ -592,7 +581,7 @@
 				\caption{Sensor comparison}
 			\end{table}
 
-			\medskip
+			\smallskip
 			\begin{exampleblock}{Key Result}
 				Fusion maintains \textbf{sub-20\,cm} range accuracy while inheriting Wi-Fi's wall-penetration capability.
 			\end{exampleblock}
@@ -613,7 +602,7 @@
 				\caption{Performance during occlusion}
 			\end{table}
 
-			\medskip
+			\smallskip
 			\begin{block}{Adaptive Trust}
 				Model seamlessly shifts trust to Wi-Fi when radar drops out — \alert{no manual switching} logic.
 			\end{block}
@@ -653,8 +642,8 @@
 
 		\begin{column}{0.50\textwidth}
 			\begin{figure}
-				\includegraphics[width=\linewidth, height=0.55\textheight, keepaspectratio]{Placeholder.png}
-				\caption{ESP32-S3 serial output showing FUSED predictions with inference times}
+				\includegraphics[width=\linewidth, height=0.50\textheight, keepaspectratio]{Placeholder.png}
+				\caption{ESP32-S3 serial output showing FUSED predictions}
 			\end{figure}
 		\end{column}
 	\end{columns}
@@ -685,25 +674,28 @@
 
 		\begin{column}{0.46\textwidth}
 			\centering
-			% TikZ Min-RTT visualization
-			\begin{tikzpicture}[scale=0.8, transform shape]
+			% TikZ Min-RTT visualization — scaled down, labels inside chart area
+			\begin{tikzpicture}[scale=0.7, transform shape]
 				% Bar chart showing raw vs filtered
 				\draw[->] (0,0) -- (0,4) node[above, font=\tiny] {Range (m)};
-				\draw[->] (0,0) -- (6,0) node[right, font=\tiny] {Burst \#};
+				\draw[->] (0,0) -- (5.5,0) node[right, font=\tiny] {Frame \#};
 
 				% Raw samples (16 bars)
 				\foreach \x/\h in {0.3/2.2, 0.6/1.8, 0.9/3.5, 1.2/1.7, 1.5/2.8, 1.8/1.5, 2.1/3.0, 2.4/1.8, 2.7/2.0, 3.0/1.7, 3.3/3.8, 3.6/1.5, 3.9/2.3, 4.2/1.8, 4.5/2.9, 4.8/1.7} {
 					\fill[blue!30] (\x-0.1, 0) rectangle (\x+0.1, \h);
 				}
 
-				% Min line
-				\draw[red!70, thick, dashed] (0, 1.5) -- (5.2, 1.5) node[right, font=\tiny\bfseries, text=red!70] {Min: 2.7\,m};
+				% Min line — label inside chart area
+				\draw[red!70, thick, dashed] (0, 1.5) -- (5.2, 1.5);
+				\node[font=\tiny\bfseries, text=red!70, anchor=south west] at (0.1, 1.5) {Min: 2.7\,m};
 
 				% True distance line
-				\draw[green!60!black, thick, dotted] (0, 1.3) -- (5.2, 1.3) node[right, font=\tiny\bfseries, text=green!60!black] {True: 2.5\,m};
+				\draw[green!60!black, thick, dotted] (0, 1.3) -- (5.2, 1.3);
+				\node[font=\tiny\bfseries, text=green!60!black, anchor=north west] at (0.1, 1.3) {True: 2.5\,m};
 
 				% Mean line
-				\draw[orange!70, thick, dashdotted] (0, 2.2) -- (5.2, 2.2) node[right, font=\tiny\bfseries, text=orange!70] {Mean: 3.2\,m};
+				\draw[orange!70, thick, dashdotted] (0, 2.2) -- (5.2, 2.2);
+				\node[font=\tiny\bfseries, text=orange!70, anchor=south west] at (0.1, 2.2) {Mean: 3.2\,m};
 			\end{tikzpicture}
 		\end{column}
 	\end{columns}
@@ -721,15 +713,15 @@
 
 	\centering
 	\scriptsize
-	\begin{tabular}{c p{2.8cm} p{3.5cm} p{4cm}}
+	\begin{tabular}{c p{2.1cm} p{2.9cm} p{3.6cm}}
 		\toprule
 		\textbf{\#} & \textbf{Challenge} & \textbf{Root Cause} & \textbf{Solution} \\
 		\midrule
-		1 & Radar drops stationary targets & LD2450 MTI filter requires Doppler shift & Micro-motion protocol — subjects sway gently, feet planted \\[4pt]
-		2 & UART corruption during FTM & Wi-Fi ISR preempts UART on same core, 128\,B FIFO overflows in 5\,ms & UART on Core 1, Wi-Fi on Core 0 — physically isolated \\[4pt]
-		3 & INT8 quantization destroys accuracy & 256 bins / 6\,m = 2.35\,cm floor, compounds; tanh LUT 30\%+ off & Stay \alert{Float32} — 11.6\,KB, quant saves nothing \\[4pt]
-		4 & Zero-fill pulls to origin & Missing $r{=}0$ means ``at sensor'' not ``unknown'' & \alert{Forward-fill} + binary freshness flag \\[4pt]
-		5 & Wi-Fi multipath inflates range & 2.4\,GHz reflects, 20\,MHz can't resolve & \alert{HT40} + 16-frame min-RTT filter \\
+		1 & Radar drops stationary targets & LD2450 MTI filter needs Doppler shift & Micro-motion protocol — subjects sway gently \\[3pt]
+		2 & UART corruption during FTM & Wi-Fi ISR preempts UART on same core, FIFO overflows & UART on Core 1, Wi-Fi on Core 0 \\[3pt]
+		3 & INT8 quant.\ destroys accuracy & 256 bins / 6\,m = 2.35\,cm floor; tanh LUT 30\%+ off & Stay \alert{Float32} — 11.6\,KB \\[3pt]
+		4 & Zero-fill pulls to origin & $r{=}0$ means ``at sensor'' not ``unknown'' & \alert{Forward-fill} + binary fresh flag \\[3pt]
+		5 & Wi-Fi multipath inflates range & 2.4\,GHz reflects, 20\,MHz can't resolve & \alert{HT40} + min-RTT filter \\
 		\bottomrule
 	\end{tabular}
 \end{frame}
@@ -744,30 +736,26 @@
 	\frametitle{Remaining $\sim$15\%}
 	\framesubtitle{From Current State to Final Validation}
 
-	\begin{columns}[c]
-		\begin{column}{0.55\textwidth}
-			\scriptsize
-			\begin{table}
-				\centering
-				\begin{tabular}{l l p{4cm}}
-					\toprule
-					\textbf{Task} & \textbf{Status} & \textbf{Details} \\
-					\midrule
-					Extended range data & Pending & Current: 2--5\,m only. Need 0.5--2\,m and 5--6\,m segments \\[3pt]
-					Hardware packaging & Pending & 3D-print PLA enclosures, vertical stacking to reduce EM coupling \\[3pt]
-					Multi-tag testing & Pending & 2--3 simultaneous tags — ESP-NOW collision handling \\[3pt]
-					Field validation & Pending & Walk-tests in warehouse / factory environment \\
-					\bottomrule
-				\end{tabular}
-			\end{table}
-		\end{column}
+	\scriptsize
+	\begin{table}
+		\centering
+		\begin{tabular}{l l p{5.5cm}}
+			\toprule
+			\textbf{Task} & \textbf{Status} & \textbf{Details} \\
+			\midrule
+			Extended range data & Pending & Current: 2--5\,m only. Need 0.5--2\,m and 5--6\,m segments \\[3pt]
+			Hardware packaging & Pending & 3D-print PLA enclosures, vertical stacking to reduce EM coupling \\[3pt]
+			Multi-tag testing & Pending & 2--3 simultaneous tags — ESP-NOW collision handling \\[3pt]
+			Field validation & Pending & Walk-tests in warehouse / factory environment \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
 
-		\begin{column}{0.40\textwidth}
-			\begin{alertblock}{Known Limitation}
-				\scriptsize Wi-Fi FTM provides \alert{no angle}. During full radar blackout, range accuracy is maintained but angular estimate relies on stale forward-fill. A second angle-capable sensor (UWB, camera) would resolve this.
-			\end{alertblock}
-		\end{column}
-	\end{columns}
+	\medskip
+
+	\begin{alertblock}{Known Limitation}
+		\scriptsize Wi-Fi FTM provides \alert{no angle}. During full radar blackout, range accuracy is maintained but angular estimate relies on stale forward-fill. A second angle-capable sensor (UWB, camera) would resolve this.
+	\end{alertblock}
 \end{frame}
 
 %========================================================================================
